@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackBox | Access Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            /* Changed from purple to dark red radial gradient */
+            background-image: radial-gradient(circle at 50% 50%, #2a0505 0%, #0a0a0a 100%);
+            color: white;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .font-gaming {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+            /* Changed border from purple to red */
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            /* Changed focus from purple to red */
+            border-color: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+            outline: none;
+        }
+
+        .hidden-form {
+            display: none;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes gradient-x {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .animate-shimmer {
+            animation: shimmer 2s infinite;
+        }
+
+        .animate-gradient-x {
+            animation: gradient-x 3s linear infinite;
+        }
+
+        #login-form,
+        #signup-form {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Toast Colors - Keeping your logic but updating Info to Red */
+        .toast-success {
+            --toast-color: #ef4444;
+        }
+
+        /* Matches Red Theme */
+        .toast-error {
+            --toast-color: #7f1d1d;
+        }
+
+        .toast-info {
+            --toast-color: #ff0000;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        @media (min-width: 640px) {
+            #toast-container {
+                bottom: 24px;
+                right: 24px;
+                left: auto;
+                width: auto;
+            }
+        }
+
+        .gaming-toast {
+            pointer-events: auto;
+            width: 100%;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--toast-color);
+            padding: 16px;
+            border-radius: 4px 8px 8px 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+        }
+
+        @media (min-width: 640px) {
+            .gaming-toast {
+                min-width: 320px;
+                width: auto;
+                transform: translateX(120%);
+            }
+        }
+
+        .gaming-toast.show {
+            transform: translate(0);
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="fixed inset-0 z-[-1] overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[linear-gradient(to_right,#ff000008_1px,transparent_1px),linear-gradient(to_bottom,#ff000008_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+        </div>
+        <div class="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-red-900/20 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-red-950/10 blur-[120px]">
+        </div>
+    </div>
+
+    <div class="w-full max-w-md animate-in fade-in zoom-in duration-700">
+        <div class="text-center mb-10 group">
+            <h2
+                class="font-gaming text-3xl md:text-4xl font-black tracking-[0.1em] md:tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-white to-red-600 bg-[length:200%_auto] group-hover:animate-gradient-x">
+                BLACK<span class="text-white">BOX</span>
+            </h2>
+            <p
+                class="text-[9px] md:text-[10px] text-red-500/60 uppercase tracking-[0.3em] md:tracking-[0.5em] mt-2 font-semibold">
+                Neural Link Established
+            </p>
+        </div>
+
+        <div class="relative group">
+            <div
+                class="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-900 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200">
+            </div>
+
+            <div
+                class="glass-card relative rounded-2xl p-6 md:p-8 border border-white/10 bg-[#0a0a0c]/80 backdrop-blur-2xl">
+
+                <div id="login-form" class="space-y-6">
+                    <div class="space-y-1">
+                        <h1 class="font-gaming text-xl text-white">SYSTEM_ACCESS</h1>
+                        <p class="text-xs text-slate-500">Enter credentials to bypass firewall.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <i
+                                class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input id="lemail" type="email" placeholder="PILOT EMAIL"
+                                class="w-full bg-black/40 border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all outline-none placeholder:text-slate-600">
+                        </div>
+                        <div class="relative">
+                            <i
+                                class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input id="lpassword" type="password" placeholder="ACCESS KEY"
+                                class="w-full bg-black/40 border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all outline-none placeholder:text-slate-600">
+                        </div>
+                        <button id="login-btn"
+                            class="relative w-full group overflow-hidden rounded-xl bg-red-600 px-8 py-4 text-sm font-bold text-white transition-all hover:bg-red-500 active:scale-[0.98]">
+                            <span
+                                class="relative z-10 flex items-center justify-center gap-2 tracking-widest font-gaming text-[12px] md:text-sm">INITIATE_SESSION
+                                <i class="fa-solid fa-bolt-lightning animate-pulse"></i></span>
+                            <div
+                                class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-shimmer">
+                            </div>
+                        </button>
+                    </div>
+
+                    <p class="text-center text-[11px] text-slate-500 tracking-wide">
+                        UNREGISTERED?
+                        <button onclick="toggleForm('signup')"
+                            class="text-red-500 hover:text-white font-bold transition-colors ml-1 underline-offset-4 hover:underline">CREATE_ID</button>
+                    </p>
+                </div>
+
+                <div id="signup-form" class="hidden-form space-y-6">
+                    <div class="space-y-1">
+                        <h1 class="font-gaming text-xl text-white">ENLIST_PILOT</h1>
+                        <p class="text-xs text-slate-500">Create your unique neural signature.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <input id="semail" type="email" placeholder="REGISTRATION EMAIL"
+                            class="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3.5 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all outline-none">
+                        <input id="spassword" type="password" placeholder="NEW ACCESS KEY"
+                            class="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3.5 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all outline-none">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button id="signup-btn"
+                                class="w-full sm:w-2/3 rounded-xl bg-white px-4 py-4 text-sm font-bold text-black transition-all hover:bg-red-500 hover:text-white active:scale-[0.98] font-gaming tracking-widest">ENLIST_NOW</button>
+                            <button id="google-btn"
+                                class="w-full sm:w-1/3 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-4 text-sm font-bold text-white transition-all hover:bg-white/10 active:scale-[0.98]">
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                    class="w-5 h-5" alt="Google">
+                                <span class="sm:hidden font-gaming tracking-widest text-[10px]">GOOGLE_AUTH</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-center text-[11px] text-slate-500 tracking-wide">
+                        ADMINISTRATOR?
+                        <button onclick="toggleForm('admin')"
+                            class="text-red-500 hover:text-white font-bold transition-colors ml-1 underline-offset-4 hover:underline">ROOT_ACCESS</button>
+                    </p>
+                </div>
+
+                <div id="admin-form" class="hidden-form space-y-6">
+                    <div class="space-y-1">
+                        <h1 class="font-gaming text-xl text-white">ADMIN_ACCESS</h1>
+                        <p class="text-xs text-slate-500">Enter credentials to bypass firewall.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <input id="admin-password" type="password" placeholder="ADMIN PASSWORD"
+                            class="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3.5 text-sm focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all outline-none">
+                        <button id="admin-btn"
+                            class="w-full rounded-xl bg-white px-4 py-4 text-sm font-bold text-black transition-all hover:bg-red-500 hover:text-white active:scale-[0.98] font-gaming tracking-widest">ACCESS_ADMIN</button>
+                    </div>
+                    <p class="text-center text-[11px] text-slate-500 tracking-wide">
+                        REGULAR_PILOT?
+                        <button onclick="toggleForm('login')"
+                            class="text-red-500 hover:text-white font-bold transition-colors ml-1 underline-offset-4 hover:underline">RETURN</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 md:mt-12 text-center pb-8">
+            <button onclick="window.location.href = '../index.html'"
+                class="inline-flex items-center gap-2 text-[10px] font-bold text-slate-600 hover:text-red-500 tracking-[0.3em] transition-all uppercase group">
+                <span class="h-[1px] w-4 bg-slate-800 group-hover:w-8 group-hover:bg-red-500 transition-all"></span>
+                Terminal Exit
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm(target) {
+            const forms = {
+                'login': document.getElementById('login-form'),
+                'signup': document.getElementById('signup-form'),
+                'admin': document.getElementById('admin-form')
+            };
+            Object.values(forms).forEach(form => form.classList.add('hidden-form'));
+            forms[target].classList.remove('hidden-form');
+        }
+
+        document.getElementById('admin-btn').addEventListener('click', async () => {
+            const password = document.getElementById('admin-password').value;
+            const passkey = "admin123";
+            if (password === passkey) {
+                window.location.href = './firebase/admin.html';
+            } else {
+                showToast('ACCESS DENIED: Invalid credentials.', 'error');
+            }
+        });
+    </script>
+    <script type="module" src="./firebase/auth.js"></script>
+</body>
+
+</html>

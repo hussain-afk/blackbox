@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackBox | Gaming Arena | God Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700;900&display=swap');
+
+        :root {
+            --neon-red: #ff0000;
+            --dark-red: #7f1d1d;
+            --bg-black: #050505;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-black);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .font-gaming {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* UI Fix: Scanline overlay was blocking clicks - Added pointer-events-none */
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            /* background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02)); */
+            z-index: 9999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Navbar Glassmorphism Fix */
+        .nav-scrolled {
+            background: rgba(5, 5, 5, 0.8) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7), 0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Fixed: Card clipping on mobile */
+        .god-border {
+            position: relative;
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+        }
+
+        .god-border:hover {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.15);
+            transform: translateY(-8px);
+        }
+
+        /* UI Fix: Button Skew Issues */
+        .btn-main {
+            position: relative;
+            background: var(--neon-red);
+            color: white;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-main:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        }
+
+        /* Mobile Menu Fixes */
+        #mobile-menu {
+            transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+            transform: translateY(-100%);
+        }
+
+        #mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #330000;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff0000;
+        }
+
+        /* Professional Glassmorphism & Radius */
+        .modern-form-container {
+            border-radius: 24px;
+            /* Soft modern square look */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.267);
+        }
+
+        /* Input Focus Glows */
+        #arenaForm input,
+        #arenaForm select {
+            border-radius: 12px;
+            transition: all 0.25s ease-in-out;
+        }
+
+        #arenaForm input:focus,
+        #arenaForm select:focus {
+            border-color: rgba(220, 38, 38, 0.5);
+            /* Subtle Red */
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+            background-color: #121212;
+        }
+
+        /* Style for the Time Picker Icon (Modern Browsers) */
+        #arenaForm input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+            cursor: pointer;
+        }
+
+        /* Custom Dropdown Arrow */
+        #arenaForm select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234b5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        /* Smooth Entrance Animation */
+        #booking-overlay:not(.hidden) .modern-form-container {
+            animation: formReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes formReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Status Message Style */
+        #status.success {
+            color: #10b981;
+            /* Professional Emerald Green */
+        }
+
+        /* Modern Shimmer Animation */
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Input Focus State Lifting */
+        #arenaForm input,
+        #arenaForm select {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        #arenaForm input:focus,
+        #arenaForm select:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style for the Time Picker (Dark Mode Optimized) */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8) sepia(100%) saturate(1000%) hue-rotate(320deg);
+            cursor: pointer;
+        }
+
+        /* Form Container Backdrop blur for professional glass feel */
+        .modern-form-container {
+            backdrop-filter: blur(25px) saturate(180%);
+        }
+
+        /* Entrance Animation */
+        #booking-overlay:not(.hidden) .modern-form-container {
+            animation: modalScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar for the Select Dropdowns in Dark Mode */
+        select option {
+            padding: 15px;
+            background-color: #0a0a0a;
+            color: white;
+        }
+
+        /* Loading Animation Styles */
+        @keyframes glitch-flicker {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.1);
+            /* Slight zoom out effect on exit */
+            pointer-events: none;
+        }
+
+        .terminal-flicker {
+            animation: glitch-flicker 0.1s infinite opacity-50;
+        }
+    </style>
+</head>
+
+<body class="scanlines">
+
+    <div id="loading-screen"
+        class="fixed inset-0 z-[1000] bg-[#050505] flex flex-col items-center justify-center transition-all duration-1000 ease-in-out">
+        <div class="absolute inset-0 opacity-10 pointer-events-none"
+            style="background-image: linear-gradient(#ff0000 1px, transparent 1px), linear-gradient(90deg, #ff0000 1px, transparent 1px); background-size: 50px 50px;">
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <div class="mb-12 relative">
+                <div class="w-24 h-24 border-2 border-red-600 animate-[spin_4s_linear_infinite] opacity-50"></div>
+                <div
+                    class="absolute inset-0 w-24 h-24 border-2 border-white animate-[spin_2s_linear_infinite_reverse] scale-75">
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-2 h-2 bg-red-600 animate-pulse shadow-[0_0_15px_#ff0000]"></div>
+                </div>
+            </div>
+
+            <div class="font-gaming text-5xl md:text-7xl font-black text-white mb-2 italic tracking-tighter relative">
+                <span class="relative z-10">BLACK<span class="text-red-600">BOX</span></span>
+                <span class="absolute inset-0 text-red-500/30 translate-x-1 animate-pulse">BLACKBOX</span>
+                <span class="absolute inset-0 text-blue-500/30 -translate-x-1 animate-pulse">BLACKBOX</span>
+            </div>
+
+            <div class="w-80 space-y-4">
+                <div class="flex justify-between font-mono text-[8px] text-zinc-500 uppercase tracking-[0.4em]">
+                    <span id="load-status-text">Kernel_Loading...</span>
+                    <span id="load-status-perc">0%</span>
+                </div>
+
+                <div class="h-[3px] w-full bg-zinc-900 overflow-hidden relative">
+                    <div id="progress-bar-bg" class="absolute inset-0 bg-red-900/20 w-0 transition-all duration-500">
+                    </div>
+                    <div id="progress-bar-main"
+                        class="absolute inset-0 bg-red-600 w-0 transition-all duration-200 shadow-[0_0_15px_#ff0000]">
+                    </div>
+                </div>
+
+                <div id="decrypt-text"
+                    class="font-mono text-[9px] text-red-600/60 text-center uppercase tracking-widest h-4">
+                    > SECURING_VOICE_ENCRYPTION...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="navbar"
+        class="fixed w-full z-[100] transition-all duration-300 px-6 md:px-12 py-6 flex justify-between items-center">
+        <div class="text-2xl md:text-3xl font-gaming font-black italic">
+            <span class="text-red-600">BLACK</span><span class="text-white">BOX</span>
+            <span
+                class="hidden md:block text-[8px] tracking-[0.4em] text-red-500/60 mt-[-4px]">E-SPORTS_GAMING_ARENA</span>
+        </div>
+
+        <div class="hidden lg:flex space-x-10 font-bold uppercase text-[10px] tracking-[0.25em]">
+            <a href="#home" class="hover:text-red-500 transition-colors">Home</a>
+            <a href="#stats" class="hover:text-red-500 transition-colors">Specs</a>
+            <a href="#tournaments" class="hover:text-red-500 transition-colors">Events</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button id="book-pc-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px] skew-x-[-12deg]">
+                Book_A_PC_Now
+            </button>
+            <button id="logout-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px]">
+                EXIT_VOID
+            </button>
+            <button id="menu-btn" class="lg:hidden text-2xl text-red-600 p-2">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+
+        </div>
+
+    </nav>
+
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[150] bg-black flex flex-col items-center justify-center space-y-8 lg:hidden">
+        <button id="close-btn" class="absolute top-8 right-8 text-4xl text-red-600">&times;</button>
+        <a href="#home" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">HOME</a>
+        <a href="#stats" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">SPECS</a>
+        <a href="#tournaments" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">EVENTS</a>
+        <button id="mobileLogoutBtn"
+            class="bg-red-600 text-white px-10 py-3 font-black skew-x-[-12deg] uppercase">Logout</button>
+    </div>
+
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=2070"
+                class="w-full h-full object-cover opacity-20" alt="Gaming">
+        </div>
+
+        <div class="text-center px-6 max-w-5xl">
+            <div
+                class="inline-block border border-red-600/40 bg-red-600/5 px-4 py-1 text-[9px] font-black tracking-[0.5em] text-red-500 mb-6 uppercase">
+                Hardware_Status: Optimal
+            </div>
+            <h1
+                class="font-gaming text-5xl md:text-8xl lg:text-9xl font-black mb-6 tracking-tighter italic uppercase leading-tight">
+                E-SPORTS <span class="text-red-600 neon-text">ARENA</span>
+            </h1>
+            <p class="text-zinc-400 text-sm md:text-lg mb-10 max-w-2xl mx-auto font-medium tracking-wide">
+                Dominate the arena with 540Hz displays and enterprise-grade
+                fiber uplinks. The ultimate zero-latency destination.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#tournaments" class="btn-main px-10 py-4 text-xs">Explore Events</a>
+                <button id="book-pc-btn"
+                    class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-10 py-4 text-xs font-black transition-all uppercase skew-x-[12deg]">
+                    Book_A_PC_Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats" class="py-20 bg-[#080000] border-y border-red-900/10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-10 text-center">
+            <div class="space-y-2">
+                <div class="text-white text-4xl md:text-5xl font-gaming font-black">10+</div>
+                <div class="text-[10px] uppercase tracking-widest text-red-800 font-bold">PlayStation 5</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-white text-4xl md:text-5xl font-gaming font-black">30+</div>
+                <div class="text-[10px] uppercase tracking-widest text-red-800 font-bold">Gaming PC</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-white text-4xl md:text-5xl font-gaming font-black">10+</div>
+                <div class="text-[10px] uppercase tracking-widest text-red-800 font-bold">VR Headsets</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-white text-4xl md:text-5xl font-gaming font-black">24/7</div>
+                <div class="text-[10px] uppercase tracking-widest text-red-800 font-bold">Uptime</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tournaments" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-l-4 border-red-600 pl-6">
+            <div>
+                <h2 class="font-gaming text-4xl md:text-6xl font-black uppercase italic leading-none">Live <span
+                        class="text-red-600">Feeds</span></h2>
+                <p class="text-zinc-500 text-[10px] mt-2 font-bold tracking-[0.3em] uppercase">Cloud Mainframe
+                    Synchronization Active</p>
+            </div>
+        </div>
+
+        <div id="tournament-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+    </section>
+
+    <section id="booking-overlay"
+        class="hidden fixed inset-0 z-[200] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-500">
+        <div
+            class="modern-form-container relative w-full max-w-md bg-[#0a0a0a]/90 border border-white/10 rounded-[2rem] p-10 shadow-[0_32px_64px_-15px_rgba(0,0,0,0.7)] overflow-hidden">
+
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-red-600/10 blur-[80px] rounded-full"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-red-600/5 blur-[80px] rounded-full"></div>
+
+            <button id="close-booking"
+                class="absolute top-8 right-8 text-zinc-500 hover:text-white hover:rotate-90 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="mb-10 text-center">
+                <h1 class="font-gaming text-3xl font-black tracking-tighter text-white mb-2 uppercase">
+                    Black<span class="text-red-600">Box</span><span class="animate-pulse">_</span>
+                </h1>
+                <div class="h-[2px] w-12 bg-red-600 mx-auto mb-3"></div>
+                <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em]">Secure Node Reservation</p>
+            </div>
+
+            <form id="arenaForm" class="space-y-5">
+                <div class="group">
+                    <label
+                        class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Gamer
+                        Identity</label>
+                    <div class="relative">
+                        <input type="text" id="gamerTag" placeholder="Enter Handle" required
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label
+                        class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Hardware
+                        Tier</label>
+                    <div class="relative">
+                        <select id="rigType" required
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white appearance-none transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10">
+                            <option value="" disabled selected class="bg-[#0a0a0a]">Select Rig...</option>
+                            <option value="GAMING PC" class="bg-[#0a0a0a]">Battle Station (RTX 4090)</option>
+                            <option value="PS5 CONSOLE" class="bg-[#0a0a0a]">PlayStation 5 Pro Zone</option>
+                            <option value="PRIVATE ROOM" class="bg-[#0a0a0a]">The Private Vault</option>
+                        </select>
+                        <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-5">
+                    <div class="group">
+                        <label
+                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1">Session</label>
+                        <select id="hours" required
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm text-white appearance-none focus:border-red-600/50 focus:outline-none transition-all">
+                            <option value="1" class="bg-[#0a0a0a]">1 Hour</option>
+                            <option value="2" class="bg-[#0a0a0a]">2 Hours</option>
+                            <option value="5" class="bg-[#0a0a0a]">5 Hours</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label
+                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1">Uplink</label>
+                        <input type="time" id="startTime" required
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm text-white focus:border-red-600/50 focus:outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn"
+                        class="relative group w-full overflow-hidden bg-red-600 py-5 rounded-2xl transition-all duration-300 hover:bg-red-700 active:scale-95 shadow-[0_20px_40px_-10px_rgba(220,38,38,0.3)]">
+                        <span class="relative z-10 text-white font-black text-[11px] uppercase tracking-[0.3em]">Confirm
+                            Deployment</span>
+                        <div
+                            class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]">
+                        </div>
+                    </button>
+                </div>
+
+                <div id="status"
+                    class="hidden text-[10px] text-center font-black tracking-[0.2em] text-red-500 uppercase"></div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-black border-t border-red-900/30 pt-20 pb-10 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div class="lg:col-span-2">
+                    <div class="text-3xl font-gaming font-black text-red-600 mb-6 italic">BLACKBOX</div>
+                    <p class="text-zinc-500 text-xs tracking-widest uppercase max-w-sm leading-loose">
+                        High-stakes competition meets enterprise-grade infrastructure.
+                        Optimization is not an option—it is a requirement.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-gaming text-xs text-white mb-6 uppercase tracking-widest">Protocol</h4>
+                    <ul class="space-y-3 text-zinc-600 text-[10px] font-bold uppercase tracking-widest">
+                        <li><a href="#" class="hover:text-red-600 transition">Book_Station</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Rankings</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-zinc-500 hover:text-red-600 text-xl transition"><i
+                            class="fa-brands fa-discord"></i></a>
+                    <a href="#" class="text-zinc-500 hover:text-red-600 text-xl transition"><i
+                            class="fa-brands fa-twitch"></i></a>
+                    <a href="#" class="text-zinc-500 hover:text-red-600 text-xl transition"><i
+                            class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-red-900/10 text-center md:text-left">
+                <p class="text-[8px] text-zinc-800 font-black tracking-[0.5em] uppercase">© 2026 BLACKBOX ARENA //
+                    AUTH_GOD_MODE</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('navbar');
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // FIXED: Navbar logic using a specific class
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('nav-scrolled');
+            } else {
+                nav.classList.remove('nav-scrolled');
+            }
+        });
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
+        closeBtn.addEventListener('click', () => mobileMenu.classList.remove('active'));
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        }));
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            window.location.replace("../index.html");
+        });
+        document.getElementById('mobileLogoutBtn').addEventListener('click', () => {
+            window.location.replace("../index.html");
+        });
+
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('progress-bar-main');
+            const barBg = document.getElementById('progress-bar-bg');
+            const perc = document.getElementById('load-status-perc');
+            const statusText = document.getElementById('load-status-text');
+            const decryptText = document.getElementById('decrypt-text');
+            const screen = document.getElementById('loading-screen');
+
+            const logs = [
+                "MTX_V4.0_INITIALIZING",
+                "ESTABLISHING_VPN_TUNNEL",
+                "SYNCING_540HZ_DRIVERS",
+                "BYPASSING_FIREWALL",
+                "UPLINK_STABLE",
+                "AUTHORIZING_GOD_MODE"
+            ];
+
+            let progress = 0;
+
+            const updateLoader = () => {
+                // Staggered progress for realism
+                progress += Math.random() * 8;
+
+                if (progress > 100) progress = 100;
+
+                bar.style.width = `${progress}%`;
+                barBg.style.width = `${progress}%`;
+                perc.innerText = `${Math.floor(progress)}%`;
+
+                // Update Log Text based on %
+                if (progress < 25) statusText.innerText = logs[0];
+                else if (progress < 50) statusText.innerText = logs[1];
+                else if (progress < 75) statusText.innerText = logs[2];
+                else statusText.innerText = logs[5];
+
+                // Random Decryptor Text Animation
+                decryptText.innerText = `> ${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
+
+                if (progress < 100) {
+                    setTimeout(updateLoader, 80);
+                } else {
+                    decryptText.innerText = "ACCESS_GRANTED";
+                    decryptText.style.color = "#fff";
+                    setTimeout(() => {
+                        screen.classList.add('fade-out');
+                        document.body.style.overflow = 'auto';
+                    }, 800);
+                }
+            };
+
+            updateLoader();
+        });
+    </script>
+
+    <script>
+        // --- UI TOGGLE LOGIC ---
+        const bookingOverlay = document.getElementById('booking-overlay');
+        const bookPcBtn = document.getElementById('book-pc-btn');
+        const closeBooking = document.getElementById('close-booking');
+
+        const toggleBooking = () => {
+            bookingOverlay.classList.toggle('hidden');
+            document.body.style.overflow = bookingOverlay.classList.contains('hidden') ? 'auto' : 'hidden';
+        };
+
+        bookPcBtn.addEventListener('click', toggleBooking);
+        closeBooking.addEventListener('click', toggleBooking);
+
+        // Close on background click
+        bookingOverlay.addEventListener('click', (e) => {
+            if (e.target === bookingOverlay) toggleBooking();
+        });
+
+        // --- ULTRAMSG FORM LOGIC ---
+        const INSTANCE_ID = "instance165852";
+        const API_TOKEN = "jm8vef84sl3kjao7";
+        const ADMIN_MOBILE = "923368044668";
+
+        const form = document.getElementById('arenaForm');
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            btn.disabled = true;
+            btn.innerText = "SYNCHRONIZING...";
+            status.classList.add('hidden');
+
+            const gamer = document.getElementById('gamerTag').value;
+            const rig = document.getElementById('rigType').value;
+            const duration = document.getElementById('hours').value;
+            const time = document.getElementById('startTime').value;
+
+            const message = `🎮 *NEW ARENA BOOKING* 🎮\n\n` +
+                `*Gamer:* ${gamer}\n` +
+                `*Hardware:* ${rig}\n` +
+                `*Arrival:* ${time}\n` +
+                `*Duration:* ${duration}\n` +
+                `_System: BlackBox Gaming Terminal_`;
+
+            const url = `https://api.ultramsg.com/${INSTANCE_ID}/messages/chat`;
+            const params = new URLSearchParams();
+            params.append("token", API_TOKEN);
+            params.append("to", ADMIN_MOBILE);
+            params.append("body", message);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
+                });
+
+                if (response.ok) {
+                    status.innerText = "RESERVATION DEPLOYED SUCCESSFULLY!";
+                    status.classList.remove('hidden');
+                    form.reset();
+                    // Close modal after 2 seconds
+                    setTimeout(toggleBooking, 2000);
+                } else {
+                    throw new Error("API Response Error");
+                }
+            } catch (err) {
+                status.innerText = "UPLINK FAILED. CHECK API CONFIG.";
+                status.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Book Now";
+            }
+        });
+    </script>
+    <script type="module" src="../firebase/firestore.js"></script>
+</body>
+
+</html>

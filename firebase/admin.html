@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackbox Admin | v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            margin: 0;
+            background: radial-gradient(circle at center, #1a0202 0%, #050505 100%);
+            color: #e5e5e5;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Responsive Scroll: Hidden on body, allowed on containers */
+        @media (min-width: 1024px) {
+
+            body,
+            html {
+                overflow: hidden;
+            }
+        }
+
+        .neon-box {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+        }
+
+        .input-dark {
+            background: #0a0a0a !important;
+            border: 1px solid #1f1f1f !important;
+            color: #ef4444;
+            transition: all 0.3s ease;
+        }
+
+        .input-dark:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            outline: none;
+        }
+
+        .glass {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(20px);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #7f1d1d;
+            border-radius: 10px;
+        }
+
+        /* Responsive Dashboard Height */
+        #dashboard {
+            display: none;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        @media (min-width: 1024px) {
+            #dashboard {
+                height: 100vh;
+                padding: 1.5rem;
+                grid-template-columns: repeat(12, 1fr);
+            }
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(107%);
+            cursor: pointer;
+        }
+
+        .gaming-toast {
+            pointer-events: auto;
+            width: calc(100% - 32px);
+            background: rgba(10, 10, 12, 0.95);
+            border-left: 4px solid #ef4444;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+
+<body class="flex flex-col lg:items-center lg:justify-center">
+
+    <div id="dashboard" class="flex flex-col lg:grid gap-4 lg:gap-6">
+
+        <div class="flex flex-col gap-4 lg:col-span-3 lg:h-full">
+            <div class="glass neon-box p-5 lg:p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4 border-b border-red-900/50 pb-2">
+                    <h2 class="text-red-500 font-black text-xs uppercase tracking-widest">Terminal Config</h2>
+                    <button onclick="logoutAdmin()"
+                        class="text-[9px] bg-red-900/20 hover:bg-red-600 hover:text-white text-red-500 px-2 py-1 rounded transition-all border border-red-900/50 uppercase font-bold">
+                        Exit_Root
+                    </button>
+                </div>
+                <div>
+                    <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Collection Target</label>
+                    <input type="text" id="collection-name" value="events"
+                        class="w-full input-dark rounded-lg p-3 text-xs font-bold">
+                </div>
+            </div>
+
+            <div
+                class="glass neon-box p-5 lg:p-6 rounded-3xl flex-1 hidden md:flex flex-col justify-between min-h-[200px]">
+                <div>
+                    <h3 class="text-zinc-500 font-bold text-[10px] uppercase mb-4 tracking-widest">Hardware Status</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-[8px] uppercase font-bold text-zinc-500 mb-1"><span>CPU
+                                LOAD</span><span>65%</span></div>
+                        <div class="bg-zinc-900 h-1.5 w-full rounded-full overflow-hidden">
+                            <div class="bg-red-500 h-full w-[65%] shadow-[0_0_8px_#ef4444]"></div>
+                        </div>
+                        <div class="flex justify-between text-[8px] uppercase font-bold text-zinc-500 mb-1"><span>MEM
+                                ALLOC</span><span>40%</span></div>
+                        <div class="bg-zinc-900 h-1.5 w-full rounded-full overflow-hidden">
+                            <div class="bg-red-800 h-full w-[40%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between border-t border-zinc-800 pt-4 mt-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
+                        <span class="text-[10px] text-red-500 font-bold tracking-tighter">SECURE NODE: ONLINE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4 lg:gap-6 lg:col-span-9 lg:h-full lg:overflow-hidden">
+
+            <div class="glass neon-box p-5 lg:p-6 rounded-3xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                    <h2 class="text-lg font-black neon-text uppercase tracking-tighter text-red-500">Event Deployment
+                    </h2>
+                    <span
+                        class="w-fit px-2 py-1 bg-zinc-900 text-red-400 text-[9px] rounded border border-red-900/30">AES-256
+                        ENCRYPTED</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                    <div class="sm:col-span-6">
+                        <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Event Title</label>
+                        <input type="text" id="event-name" placeholder="CHAMPIONS LEAGUE..."
+                            class="w-full input-dark rounded-lg p-3 text-sm font-bold">
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Prize Pool ($)</label>
+                        <input type="text" id="prize-pool" placeholder="0.00"
+                            class="w-full input-dark rounded-lg p-3 text-sm font-bold">
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Status</label>
+                        <select id="status"
+                            class="w-full input-dark rounded-lg p-3 text-sm font-bold appearance-none cursor-pointer">
+                            <option value="active">ACTIVE</option>
+                            <option value="upcoming">UPCOMING</option>
+                            <option value="closed">CLOSED</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-4">
+                        <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Deployment Date</label>
+                        <input type="date" id="date" class="w-full input-dark rounded-lg p-3 text-sm font-bold">
+                    </div>
+                    <div class="sm:col-span-8">
+                        <label class="text-[9px] text-zinc-500 font-bold uppercase mb-1 block">Asset Reference
+                            (IMG_SRC)</label>
+                        <input type="text" id="img-src" placeholder="https://image-link.com/asset.png"
+                            class="w-full input-dark rounded-lg p-3 text-sm font-bold">
+                    </div>
+                </div>
+
+                <button id="add-event"
+                    class="w-full mt-6 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl transition-all shadow-lg uppercase tracking-widest text-xs border-t border-red-400/20 active:scale-[0.98]">
+                    Sync to Cloud Mainframe
+                </button>
+            </div>
+
+            <div
+                class="glass neon-box rounded-3xl flex-1 flex flex-col overflow-hidden min-h-[450px] lg:min-h-0 lg:h-full">
+                <div class="p-4 border-b border-zinc-800 bg-zinc-950/50 flex justify-between items-center shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                        <h3 class="text-red-500 font-black text-xs uppercase tracking-widest">Live Deployment Feed</h3>
+                    </div>
+                    <div class="hidden sm:flex gap-4">
+                        <span class="text-[9px] text-zinc-600">ENCRYPTION: AES-256</span>
+                        <span class="text-[9px] text-red-900/40">||||||||||||||||</span>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto overflow-x-auto custom-scroll bg-black/20">
+                    <table class="w-full text-left text-[11px] uppercase font-bold min-w-[700px] border-collapse">
+                        <thead class="sticky top-0 bg-[#0a0a0a] text-zinc-500 z-20 shadow-md">
+                            <tr>
+                                <th class="p-4 border-b border-zinc-900 bg-[#0a0a0a]">Event Identifier</th>
+                                <th class="p-4 border-b border-zinc-900 bg-[#0a0a0a]">Prize Pool</th>
+                                <th class="p-4 border-b border-zinc-900 bg-[#0a0a0a] text-center">Status</th>
+                                <th class="p-4 border-b border-zinc-900 bg-[#0a0a0a] text-right">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="event-list" class="divide-y divide-zinc-900/50 text-zinc-400">
+                            <tr class="hover:bg-red-500/5 transition-colors group">
+                                <td class="p-4 text-white font-medium">Loading Mainframe Data...</td>
+                                <td class="p-4 text-emerald-500">$0.00</td>
+                                <td class="p-4 text-center"><span
+                                        class="px-2 py-0.5 rounded bg-zinc-800 text-[8px]">SYNCING</span></td>
+                                <td class="p-4 text-right"><button
+                                        class="text-zinc-600 hover:text-red-500 transition-colors">DELETE</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-2 border-t border-zinc-900 bg-black/40 flex justify-between px-4 shrink-0">
+                    <span class="text-[8px] text-zinc-600">V2.0.4-STABLE</span>
+                    <span id="entry-count" class="text-[8px] text-red-500/50 font-bold uppercase">Ready for Input</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 right-6 flex flex-col items-end z-[100] pointer-events-none"></div>
+
+    <script>
+        function logoutAdmin() {
+            showToast('TERMINATING SESSION...', 'info');
+            setTimeout(() => {
+                window.location.replace('../index.html');
+            }, 1000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const dashboard = document.getElementById("dashboard");
+            if (dashboard) {
+                // Toggle display based on screen size
+                dashboard.style.display = window.innerWidth >= 1024 ? 'grid' : 'flex';
+                showToast('ADMIN_SESSION: ESTABLISHED', 'success');
+            }
+        });
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `p-4 mb-2 glass border-l-4 border-red-600 rounded flex flex-col transition-all duration-300 transform translate-x-full`;
+            toast.style.minWidth = "280px";
+            toast.style.background = "#0a0a0a";
+            const titles = { success: 'STABLE_LINK', error: 'SIGNAL_LOST', info: 'SYS_MSG' };
+            toast.innerHTML = `
+                <span class="text-[8px] text-red-500 font-bold uppercase tracking-widest">${titles[type] || 'NOTICE'}</span>
+                <p class="text-[10px] text-white mt-1">${message}</p>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-x-full'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+    <script type="module" src="./firestore.js"></script>
+</body>
+
+</html>
