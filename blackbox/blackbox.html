@@ -337,9 +337,6 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button id="book-pc-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px] skew-x-[-12deg]">
-                Book_A_PC_Now
-            </button>
             <button id="logout-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px]">
                 EXIT_VOID
             </button>
@@ -451,7 +448,8 @@
             </div>
 
             <form id="arenaForm" class="space-y-5">
-                <div class="group">
+                <div class="grid grid-cols-2 gap-5">
+                    <div class="group">
                     <label
                         class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Gamer
                         Identity</label>
@@ -459,6 +457,16 @@
                         <input type="text" id="gamerTag" placeholder="Enter Handle" required
                             class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
                     </div>
+                </div>
+                <div class="group">
+                    <label
+                        class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Phone
+                        Number</label>
+                    <div class="relative">
+                        <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                    </div>
+                </div>
                 </div>
 
                 <div class="group">
@@ -469,9 +477,9 @@
                         <select id="rigType" required
                             class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white appearance-none transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10">
                             <option value="" disabled selected class="bg-[#0a0a0a]">Select Rig...</option>
-                            <option value="GAMING PC" class="bg-[#0a0a0a]">Battle Station (RTX 4090)</option>
-                            <option value="PS5 CONSOLE" class="bg-[#0a0a0a]">PlayStation 5 Pro Zone</option>
-                            <option value="PRIVATE ROOM" class="bg-[#0a0a0a]">The Private Vault</option>
+                            <option value="GAMING PC" class="bg-[#0a0a0a]">GAMING PC</option>
+                            <option value="PS5 CONSOLE" class="bg-[#0a0a0a]">PS5 CONSOLE</option>
+                            <option value="PRIVATE ROOM" class="bg-[#0a0a0a]">PRIVATE ROOM</option>
                         </select>
                         <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
@@ -488,14 +496,17 @@
                             class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1">Session</label>
                         <select id="hours" required
                             class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm text-white appearance-none focus:border-red-600/50 focus:outline-none transition-all">
-                            <option value="1" class="bg-[#0a0a0a]">1 Hour</option>
-                            <option value="2" class="bg-[#0a0a0a]">2 Hours</option>
-                            <option value="5" class="bg-[#0a0a0a]">5 Hours</option>
+                            <option value="1 hour" class="bg-[#0a0a0a]">1 Hour</option>
+                            <option value="2 hours" class="bg-[#0a0a0a]">2 Hours</option>
+                            <option value="3 hours" class="bg-[#0a0a0a]">3 Hours</option>
+                            <option value="4 hours" class="bg-[#0a0a0a]">4 Hours</option>
+                            <option value="5 hours" class="bg-[#0a0a0a]">5 Hours</option>
                         </select>
                     </div>
                     <div class="group">
                         <label
-                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1">Uplink</label>
+                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1">YOUR
+                            ARRIVAL TIME</label>
                         <input type="time" id="startTime" required
                             class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm text-white focus:border-red-600/50 focus:outline-none transition-all">
                     </div>
@@ -671,6 +682,7 @@
             btn.innerText = "SYNCHRONIZING...";
             status.classList.add('hidden');
 
+            const phone = document.getElementById('phoneNumber').value;
             const gamer = document.getElementById('gamerTag').value;
             const rig = document.getElementById('rigType').value;
             const duration = document.getElementById('hours').value;
@@ -678,6 +690,7 @@
 
             const message = `🎮 *NEW ARENA BOOKING* 🎮\n\n` +
                 `*Gamer:* ${gamer}\n` +
+                `*Phone Number:* ${phone}\n` +
                 `*Hardware:* ${rig}\n` +
                 `*Arrival:* ${time}\n` +
                 `*Duration:* ${duration}\n` +

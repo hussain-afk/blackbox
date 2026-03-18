@@ -9,7 +9,15 @@ import {
     GoogleAuthProvider
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 // Your web app's Firebase configuration
-import { firebaseConfig } from "./firebase-config.js";
+const firebaseConfig = {
+    apiKey: "AIzaSyDrrCnY-GHBV1qCfySFPAI7fVvoSFJD7s4",
+    authDomain: "blackbox-gaming-arena.firebaseapp.com",
+    projectId: "blackbox-gaming-arena",
+    storageBucket: "blackbox-gaming-arena.firebasestorage.app",
+    messagingSenderId: "1056270601379",
+    appId: "1:1056270601379:web:46e18cf743947f7cd3c316",
+    measurementId: "G-ZPVLH2BHDP"
+};
 
 // 1. Initialize Firebase
 const app = initializeApp(firebaseConfig);
