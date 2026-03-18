@@ -323,48 +323,49 @@
     </div>
 
     <nav id="navbar"
-        class="fixed w-full z-[100] transition-all duration-300 px-6 md:px-12 py-6 flex justify-between items-center">
-        <div class="text-2xl md:text-3xl font-gaming font-black italic">
-            <span class="text-red-600">BLACK</span><span class="text-white">BOX</span>
-            <span
-                class="hidden md:block text-[8px] tracking-[0.4em] text-red-500/60 mt-[-4px]">E-SPORTS_GAMING_ARENA</span>
-        </div>
+    class="fixed w-full z-[100] transition-all duration-300 px-6 md:px-12 py-6 flex justify-between items-center">
+    <div class="text-2xl md:text-3xl font-gaming font-black italic">
+        <span class="text-red-600">BLACK</span><span class="text-white">BOX</span>
+        <span
+            class="hidden md:block text-[8px] tracking-[0.4em] text-red-500/60 mt-[-4px]">E-SPORTS_GAMING_ARENA</span>
+    </div>
 
-        <div class="hidden lg:flex space-x-10 font-bold uppercase text-[10px] tracking-[0.25em]">
-            <a href="#home" class="hover:text-red-500 transition-colors">Home</a>
-            <a href="#stats" class="hover:text-red-500 transition-colors">Specs</a>
-            <a href="#tournaments" class="hover:text-red-500 transition-colors">Events</a>
-        </div>
+    <div class="hidden lg:flex space-x-10 font-bold uppercase text-[10px] tracking-[0.25em]">
+        <a href="#home" class="hover:text-red-500 transition-colors">Home</a>
+        <a href="#stats" class="hover:text-red-500 transition-colors">Specs</a>
+        <a href="#tournaments" class="hover:text-red-500 transition-colors">Events</a>
+    </div>
 
-        <div class="flex items-center gap-4">
-            <div
-                class="hidden sm:block w-10 h-10 rounded-full border-2 border-red-600 overflow-hidden cursor-pointer hover:scale-105 transition-transform">
+    <div class="flex items-center gap-4">
+        <button id="logout-btn" class="hidden sm:flex btn-main items-center gap-3 pl-1 pr-6 py-1 text-[10px]">
+            <div class="w-8 h-8 rounded-full border-2 border-red-600 overflow-hidden pointer-events-none">
                 <img id="profilePicDesktop" src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover profile-pic-sync">
             </div>
+            EXIT_VOID
+        </button>
 
-            <button id="logout-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px]">
-                EXIT_VOID
-            </button>
-            <button id="menu-btn" class="lg:hidden text-2xl text-red-600 p-2">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
-        </div>
-    </nav>
+        <button id="menu-btn" class="lg:hidden text-2xl text-red-600 p-2">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+    </div>
+</nav>
 
-    <div id="mobile-menu"
-        class="fixed inset-0 z-[150] bg-black flex flex-col items-center justify-center space-y-8 lg:hidden">
-        <button id="close-btn" class="absolute top-8 right-8 text-4xl text-red-600">&times;</button>
+<div id="mobile-menu"
+    class="fixed inset-0 z-[150] bg-black flex flex-col items-center justify-center space-y-8 lg:hidden">
+    <button id="close-btn" class="absolute top-8 right-8 text-4xl text-red-600">&times;</button>
 
-        <div class="w-24 h-24 rounded-full border-4 border-red-600 overflow-hidden mb-4">
+    <div class="flex flex-col items-center gap-4">
+        <div class="w-24 h-24 rounded-full border-4 border-red-600 overflow-hidden shadow-lg">
             <img id="profilePicMobile" src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover profile-pic-sync">
         </div>
-
-        <a href="#home" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">HOME</a>
-        <a href="#stats" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">SPECS</a>
-        <a href="#tournaments" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">EVENTS</a>
         <button id="mobileLogoutBtn"
             class="bg-red-600 text-white px-10 py-3 font-black skew-x-[-12deg] uppercase">Logout</button>
     </div>
+
+    <a href="#home" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">HOME</a>
+    <a href="#stats" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">SPECS</a>
+    <a href="#tournaments" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">EVENTS</a>
+</div>
 
     <section id="home" class="relative min-h-screen flex items-center justify-center pt-20">
         <div class="absolute inset-0 -z-10">
