@@ -71,39 +71,39 @@ const syncData = (colName = "events") => {
             if (cardsContainer) {
                 const card = `
                     <div class="relative rounded-2xl overflow-hidden glass group bg-zinc-950/40 border border-white/10 transition-all duration-500 hover:shadow-[0_0_30px_rgba(239,68,68,0.3)] hover:-translate-y-2">
-    <div class="absolute inset-0 bg-gradient-to-tr from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-
-    <div class="h-52 overflow-hidden relative">
-        <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
-            <div class="bg-red-600/90 backdrop-blur-md text-[10px] px-3 py-1 rounded-sm font-gaming font-bold uppercase tracking-widest text-white shadow-xl border border-white/10">
-                ${data.status}
-            </div>
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 opacity-90"></div>
-        <img src="${data.imgSrc || 'https://via.placeholder.com/600x400?text=No+Asset+Linked'}" 
-             class="w-full h-full object-cover transition duration-700 scale-105 group-hover:scale-110" 
-             alt="Tournament">
-    </div>
-    <div class="p-6 relative z-20">
-        <span class="text-[9px] text-red-500 font-gaming font-bold uppercase tracking-[0.3em] mb-2 block opacity-80">Phase One // Entry</span>
-        <h3 class="font-gaming text-2xl font-bold mb-4 text-white tracking-tight group-hover:text-red-400 transition-colors">
-            ${data.eventName}
-        </h3>
-        <div class="flex justify-between items-center border-t border-white/5 pt-5 mt-2">
-            <div class="flex flex-col">
-                <span class="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Total Stakes</span>
-                <span class="text-emerald-400 font-gaming font-bold text-lg">$${Number(data.prizePool).toLocaleString()}</span>
-            </div>
-            <button class="bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-400 p-2 rounded-lg transition-all duration-300 group/btn">
-                <i class="fa-solid fa-arrow-right-long text-white group-hover/btn:translate-x-1 transition-transform"></i>
-            </button>
-        </div>
-    </div>
-</div>`;
+                        <div class="absolute inset-0 bg-gradient-to-tr from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        
+                            <div class="h-52 overflow-hidden relative">
+                                <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                    <div class="bg-red-600/90 backdrop-blur-md text-[10px] px-3 py-1 rounded-sm font-gaming font-bold uppercase tracking-widest text-white shadow-xl border border-white/10">
+                                        ${data.status}
+                                    </div>
+                                </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 opacity-90"></div>
+                                <img src="${data.imgSrc || 'https://via.placeholder.com/600x400?text=No+Asset+Linked'}" 
+                                     class="w-full h-full object-cover transition duration-700 scale-105 group-hover:scale-110" 
+                                     alt="Tournament">
+                            </div>
+                            <div class="p-6 relative z-20">
+                                <span class="text-[9px] text-red-500 font-gaming font-bold uppercase tracking-[0.3em] mb-2 block opacity-80">Phase One // Entry</span>
+                                <h3 class="font-gaming text-2xl font-bold mb-4 text-white tracking-tight group-hover:text-red-400 transition-colors">
+                                    ${data.eventName}
+                                </h3>
+                                <div class="flex justify-between items-center border-t border-white/5 pt-5 mt-2">
+                                    <div class="flex flex-col">
+                                        <span class="text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Total Stakes</span>
+                                        <span class="text-emerald-400 font-gaming font-bold text-lg">$${Number(data.prizePool).toLocaleString()}</span>
+                                    </div>
+                                    <button class="bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-400 p-2 rounded-lg transition-all duration-300 group/btn">
+                                        <i class="fa-solid fa-arrow-right-long text-white group-hover/btn:translate-x-1 transition-transform"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
                 cardsContainer.innerHTML += card;
             }
         });
@@ -181,3 +181,18 @@ eventList?.addEventListener("click", async (e) => {
         }
     }
 });
+
+// --- PROFILE PICTURE PERSISTENCE ---
+const updateProfilePictures = () => {
+    const profilePicUrl = localStorage.getItem("user_profile_pic");
+    if (profilePicUrl) {
+        // Find all elements with class 'profile-pic-sync'
+        const profilePics = document.querySelectorAll(".profile-pic-sync");
+        profilePics.forEach(img => {
+            img.src = profilePicUrl;
+        });
+    }
+};
+
+// Run on load
+updateProfilePictures();

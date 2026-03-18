@@ -337,20 +337,28 @@
         </div>
 
         <div class="flex items-center gap-4">
+            <div
+                class="hidden sm:block w-10 h-10 rounded-full border-2 border-red-600 overflow-hidden cursor-pointer hover:scale-105 transition-transform">
+                <img id="profilePicDesktop" src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover profile-pic-sync">
+            </div>
+
             <button id="logout-btn" class="hidden sm:flex btn-main px-6 py-2 text-[10px]">
                 EXIT_VOID
             </button>
             <button id="menu-btn" class="lg:hidden text-2xl text-red-600 p-2">
                 <i class="fa-solid fa-bars-staggered"></i>
             </button>
-
         </div>
-
     </nav>
 
     <div id="mobile-menu"
         class="fixed inset-0 z-[150] bg-black flex flex-col items-center justify-center space-y-8 lg:hidden">
         <button id="close-btn" class="absolute top-8 right-8 text-4xl text-red-600">&times;</button>
+
+        <div class="w-24 h-24 rounded-full border-4 border-red-600 overflow-hidden mb-4">
+            <img id="profilePicMobile" src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover profile-pic-sync">
+        </div>
+
         <a href="#home" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">HOME</a>
         <a href="#stats" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">SPECS</a>
         <a href="#tournaments" class="font-gaming text-2xl font-black hover:text-red-600 transition nav-link">EVENTS</a>
@@ -450,23 +458,23 @@
             <form id="arenaForm" class="space-y-5">
                 <div class="grid grid-cols-2 gap-5">
                     <div class="group">
-                    <label
-                        class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Gamer
-                        Identity</label>
-                    <div class="relative">
-                        <input type="text" id="gamerTag" placeholder="Enter Handle" required
-                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                        <label
+                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Gamer
+                            Identity</label>
+                        <div class="relative">
+                            <input type="text" id="gamerTag" placeholder="Enter Handle" required
+                                class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                        </div>
                     </div>
-                </div>
-                <div class="group">
-                    <label
-                        class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Phone
-                        Number</label>
-                    <div class="relative">
-                        <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required
-                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                    <div class="group">
+                        <label
+                            class="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-red-500 transition-colors">Phone
+                            Number</label>
+                        <div class="relative">
+                            <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required
+                                class="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 text-sm text-white transition-all duration-300 focus:border-red-600/50 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-red-600/10 placeholder:text-zinc-700">
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 <div class="group">

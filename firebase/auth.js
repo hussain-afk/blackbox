@@ -9,6 +9,7 @@ import {
     showToast
 } from "./main.js";
 
+
 // Login Elements
 const loginBtn = document.getElementById("login-btn");
 const loginEmail = document.getElementById("lemail");
@@ -33,6 +34,16 @@ loginBtn.addEventListener("click", () => {
     signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
         .then((userCredential) => {
             const user = userCredential.user;
+            
+            // Set placeholder avatar if none exists
+            if (!user.photoURL) {
+                const name = user.email.split("@")[0];
+                const avatarUrl = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
+                localStorage.setItem("user_profile_pic", avatarUrl);
+            } else {
+                localStorage.setItem("user_profile_pic", user.photoURL);
+            }
+
             console.log("Logged in successfully:", user.email);
             showToast("Welcome back!", "success");
             window.location.replace("../blackbox/blackbox.html");
@@ -53,6 +64,12 @@ signupBtn.addEventListener("click", () => {
     createUserWithEmailAndPassword(auth, signupEmail.value, signupPassword.value)
         .then((userCredential) => {
             const user = userCredential.user;
+            
+            // Set placeholder avatar since it's a new signup
+            const name = user.email.split("@")[0];
+            const avatarUrl = `https://ui-avatars.com/api/?name=${name}&background=random&color=fff&size=128`;
+            localStorage.setItem("user_profile_pic", avatarUrl);
+
             console.log("Account created:", user.email);
             showToast("Account created successfully!", "success");
             window.location.replace("../blackbox/blackbox.html");
@@ -70,7 +87,12 @@ googleBtn.addEventListener("click", () => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             const user = result.user;
+            // Save profile pic to localStorage for persistence across pages
+            if (user.photoURL) {
+                localStorage.setItem("user_profile_pic", user.photoURL);
+            }
             console.log("Logged in successfully:", user.email);
+            // console.log("google profile picture:", user.photoURL);
             showToast("Welcome back!", "success");
             window.location.replace("../blackbox/blackbox.html");
         }).catch((error) => {
@@ -82,3 +104,5 @@ googleBtn.addEventListener("click", () => {
             showToast("Login failed: " + error.message, "error");
         });
 })
+
+
