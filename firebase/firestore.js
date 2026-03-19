@@ -15,6 +15,7 @@ import {
 const db = getFirestore(app);
 
 // DOM Elements
+const date = document.getElementById("date");
 const collectionNameInput = document.getElementById("collection-name");
 const addEventBtn = document.getElementById("add-event");
 const eventNameInput = document.getElementById("event-name");
@@ -82,6 +83,9 @@ const syncData = (colName = "events") => {
                                     <div class="bg-red-600/90 backdrop-blur-md text-[10px] px-3 py-1 rounded-sm font-gaming font-bold uppercase tracking-widest text-white shadow-xl border border-white/10">
                                         ${data.status}
                                     </div>
+                                    <div class="bg-red-600/90 backdrop-blur-md text-[10px] px-3 py-1 rounded-sm font-gaming font-bold uppercase tracking-widest text-white shadow-xl border border-white/10">
+                                        ${data.date}
+                                    </div>
                                 </div>
                                 <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 opacity-90"></div>
                                 <img src="${data.imgSrc || 'https://via.placeholder.com/600x400?text=No+Asset+Linked'}" 
@@ -134,6 +138,7 @@ addEventBtn?.addEventListener("click", async () => {
         prizePool: Number(prizePoolInput.value),
         imgSrc: imgSrcInput.value.trim(),
         status: statusInput.value,
+        date: date.value,
         createdAt: serverTimestamp()
     };
 
@@ -151,6 +156,7 @@ addEventBtn?.addEventListener("click", async () => {
         eventNameInput.value = "";
         prizePoolInput.value = "";
         imgSrcInput.value = "";
+        date.value = "";
     } catch (error) {
         showToast("System Error: " + error.message, "error");
     }
@@ -167,6 +173,7 @@ eventList?.addEventListener("click", async (e) => {
         eventNameInput.value = e.target.getAttribute("data-name");
         prizePoolInput.value = e.target.getAttribute("data-prize");
         statusInput.value = e.target.getAttribute("data-status");
+        date.value = e.target.getAttribute("data-date");
         // FIXED: Pulling the img URL into the input field for editing
         imgSrcInput.value = e.target.getAttribute("data-img");
 
@@ -195,4 +202,4 @@ const updateProfilePictures = () => {
 };
 
 // Run on load
-updateProfilePictures();
+updateProfilePictures();
