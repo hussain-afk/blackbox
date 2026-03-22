@@ -31,40 +31,40 @@ let editId = null;
 const syncData = (colName = "events") => {
     const q = query(collection(db, colName), orderBy("createdAt", "desc"));
 
-   onSnapshot(q, (snapshot) => {
-    // Clear existing content to prevent duplicates
-    if (eventList) eventList.innerHTML = "";
-    if (cardsContainer) cardsContainer.innerHTML = "";
+    onSnapshot(q, (snapshot) => {
+        // Clear existing content to prevent duplicates
+        if (eventList) eventList.innerHTML = "";
+        if (cardsContainer) cardsContainer.innerHTML = "";
 
-    // 1. Handle Empty State (If no documents exist in the collection)
-    if (snapshot.empty) {
-        const noEventsHTML = `
+        // 1. Handle Empty State (If no documents exist in the collection)
+        if (snapshot.empty) {
+            const noEventsHTML = `
             <div class="col-span-full py-20 text-center">
                 <p class="text-zinc-500 font-gaming uppercase tracking-widest animate-pulse">
                     — No Live Events Detected —
                 </p>
             </div>`;
-        
-        if (cardsContainer) cardsContainer.innerHTML = noEventsHTML;
-        if (eventList) {
-            eventList.innerHTML = `
+
+            if (cardsContainer) cardsContainer.innerHTML = noEventsHTML;
+            if (eventList) {
+                eventList.innerHTML = `
                 <tr>
                     <td colspan="4" class="p-10 text-center text-zinc-600 font-mono italic">
                         Mainframe database is currently empty.
                     </td>
                 </tr>`;
+            }
+            return; // Exit function early since there is nothing to loop through
         }
-        return; // Exit function early since there is nothing to loop through
-    }
 
-    // 2. Loop through documents if they exist
-    snapshot.forEach((snapshotDoc) => {
-        const data = snapshotDoc.data();
-        const id = snapshotDoc.id;
+        // 2. Loop through documents if they exist
+        snapshot.forEach((snapshotDoc) => {
+            const data = snapshotDoc.data();
+            const id = snapshotDoc.id;
 
-        // --- Render Admin Table Row ---
-        if (eventList) {
-            const row = `
+            // --- Render Admin Table Row ---
+            if (eventList) {
+                const row = `
                 <tr class="border-b border-zinc-900 hover:bg-zinc-800/30 transition-colors">
                     <td class="p-4 text-white font-mono">
                         <div class="flex items-center gap-2">
@@ -89,12 +89,12 @@ const syncData = (colName = "events") => {
                         <button data-id="${id}" class="delete-btn text-zinc-600 hover:text-red-500 transition-colors">DELETE</button>
                     </td>
                 </tr>`;
-            eventList.innerHTML += row;
-        }
+                eventList.innerHTML += row;
+            }
 
-        // --- Render Public Cards ---
-        if (cardsContainer) {
-            const card = `
+            // --- Render Public Cards ---
+            if (cardsContainer) {
+                const card = `
     <div class="relative rounded-2xl overflow-hidden group bg-zinc-950/40 border border-white/5 transition-all duration-700 hover:shadow-[0_0_50px_rgba(239,68,68,0.2)] hover:-translate-y-3 hover:border-red-500/50">
         
         <div class="absolute top-4 right-4 z-30 flex items-center gap-2 translate-y-[-20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
@@ -143,7 +143,7 @@ const syncData = (colName = "events") => {
                     </div>
                 </div>
 
-                <button class="relative overflow-hidden bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-400 w-12 h-12 rounded-xl transition-all duration-500 group/btn">
+                <button id="event-btn" class="relative overflow-hidden bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-400 w-12 h-12 rounded-xl transition-all duration-500 group/btn">
                     <div class="absolute inset-0 bg-red-600 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
                     <i class="fa-solid fa-arrow-right relative z-10 text-white group-hover/btn:rotate-[-45deg] transition-transform duration-300"></i>
                 </button>
@@ -152,10 +152,10 @@ const syncData = (colName = "events") => {
 
         <div class="absolute bottom-0 left-0 h-1 bg-red-600 w-0 group-hover:w-full transition-all duration-700"></div>
     </div>`;
-            cardsContainer.innerHTML += card;
-        }
+                cardsContainer.innerHTML += card;
+            }
+        });
     });
-});
 };
 
 // --- INITIAL LOAD ---
@@ -248,3 +248,74 @@ const updateProfilePictures = () => {
 
 // Run on load
 updateProfilePictures();
+
+
+// --- EVENT BOOKING UI LOGIC (FIXED) ---
+const eventBookingOverlay = document.getElementById('event-booking-overlay');
+const closeEventBooking = document.getElementById('close-event-booking');
+
+// Use Event Delegation for dynamic buttons
+document.addEventListener('click', (e) => {
+    // Check if the clicked element is the button or the icon inside it
+    if (e.target.closest('#event-btn')) {
+        eventBookingOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+});
+
+const closeEventOverlay = () => {
+    eventBookingOverlay.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+};
+
+closeEventBooking?.addEventListener('click', closeEventOverlay);
+
+eventBookingOverlay?.addEventListener('click', (e) => {
+    if (e.target === eventBookingOverlay) closeEventOverlay();
+});
+
+// --- EVENT ULTRAMSG FORM LOGIC (FIXED) ---
+const eventForm = document.getElementById('eventArenaForm');
+const eventBtn = document.getElementById('eventSubmitBtn');
+const eventStatus = document.getElementById('eventStatus');
+
+eventForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    eventBtn.disabled = true;
+    eventBtn.innerText = "TRANSMITTING...";
+    eventStatus.classList.add('hidden');
+
+    const message = `🏆 *TOURNAMENT ENTRY* 🏆\n\n` +
+        `*Gamer:* ${document.querySelector('#event-booking-overlay #gamerTag').value}\n` +
+        `*Phone:* ${document.querySelector('#event-booking-overlay #phoneNumber').value}\n` +
+        `*Hardware:* ${document.querySelector('#event-booking-overlay #rigType').value}\n` +
+        `_System: BlackBox Event Registration_`;
+
+    const params = new URLSearchParams();
+    params.append("token", "jm8vef84sl3kjao7");
+    params.append("to", "923368044668");
+    params.append("body", message);
+
+    try {
+        const response = await fetch(`https://api.ultramsg.com/instance165852/messages/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        });
+
+        if (response.ok) {
+            eventStatus.innerText = "ENTRY RECEIVED BY MAINFRAME!";
+            eventStatus.classList.remove('hidden', 'text-red-500');
+            eventStatus.classList.add('text-emerald-500');
+            eventForm.reset();
+            setTimeout(closeEventOverlay, 2000);
+        }
+    } catch (err) {
+        eventStatus.innerText = "UPLINK ERROR.";
+        eventStatus.classList.remove('hidden');
+    } finally {
+        eventBtn.disabled = false;
+        eventBtn.innerText = "Confirm Tournament Entry";
+    }
+});
